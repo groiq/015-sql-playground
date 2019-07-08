@@ -20,3 +20,7 @@ insert into purchase values (1,12,10);
 insert into purchase values (2,11,100);
 insert into purchase values (2,12,1000);
 
+select cname,iname,quantity,sum(quantity) from customer join purchase using(cid) join item using(iid) group by cid,iid with rollup;
+
+select cid,iid,sum(quantity) from purchase P group by cid,iid with rollup;
+
