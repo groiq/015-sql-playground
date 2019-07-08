@@ -14,3 +14,14 @@ create database if not exists w3resource_selfmade;
 
 use w3resource_selfmade;
 
+/* MySQL Create Table [20 exercises with solution] */
+
+/* 1. Write a SQL statement to create a simple table countries 
+including columns country_id,country_name and region_id. */
+drop table if exists countries;
+CREATE TABLE countries (
+    country_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    country_name VARCHAR(32),
+    region_id INT
+);
+
