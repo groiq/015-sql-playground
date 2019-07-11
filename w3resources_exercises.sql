@@ -25,15 +25,3 @@ CREATE TABLE countries (
     region_id INT
 );
 
-insert into countries (country_name,region_id) values ('Australia',6);
-insert into countries (country_name,region_id) values ('Belgium',1);
-insert into countries (country_name,region_id) values ('Canada',2);
-
-select * from countries;
-
-/* duplicate countries */
-drop table if exists dup_countries;
-CREATE TABLE dup_countries LIKE countries;
-insert into dup_countries (select * from countries);
-select * from dup_countries;
-
