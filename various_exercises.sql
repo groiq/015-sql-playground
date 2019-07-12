@@ -18,7 +18,7 @@ For hit points assigment I'll take the sequence of numbers from 1 to 16
 and randomize it. 
 
 Data-wise, each contestant has a bib number, name, hit points 
-and the contestant who defeated them. 
+and the contestant who defeated them (called their "slayer"). 
 */
 
 drop table if exists contestant;
@@ -32,45 +32,36 @@ CREATE TABLE contestant (
 );
 
 /*
-Code for generating input statements:
-
-names = "Anfroy Bodoloff Chrodegang Drimylos Engelke Folcard Gilpin Hegesandros Ixidor Jorin Kendrick Leudbald Meginhard Nidungus Orkatz Piligrim Quenall Raynoldus Sigibuld Theutgaud Unigild Vitigis Widigast Xabier Ypolitus Zindel"
-names = names.split()
-#print(names)
-
-hitpointList = "11	2	10	1	5	9	4	13	16	7	12	6	8	15	14	3".split()
-for i in range(len(hitpointList)):
-    hitpointList[i] = int(hitpointList[i])
-#print(hitpointList)
-
-for i in range(len(hitpointList)):
-    print("insert into contestant (name,hitpoints) values (\'{}\',{});".format(names[i],hitpointList[i]))
-
+I'll set up a data object for the list of contestants.
+First, I'll generate the sql input statements,
+then I'll calculate slayers
+and then generate update statements accordingly.
+Code for that in Python:
 */
 
 /*
-Names taken from https://www.mithrilandmages.com/utilities/MedievalBrowse.php
-Hitpoint list ranomized using random.org
+#!/usr/bin/env python3
+
+# names from: https://www.name-generator.org.uk/
+# random seed was 35
+# randomized distribution of hitpoints via https://www.random.org/
+
+names = ['Bathtson Freeger', 'Pointyspen Bellelline', 'Jaenstewart Grangdon', 'Wickedro Elliottshot', 'Hermilawrence Clarkotter', 'Harilda Sandore', 'Mcdonaldcackle Bapower', 'Crawfordbroom Mitcheness', 'Thocat Burpower', 'Greenhar Roness', 'Agadunn Aumrris', 'Cacklegordon Williamsshot', 'Fostercauldron Williamar', 'Hane Grangthompson', 'Davintress Dumbleriffiths', 'Broomtucker Granghoward', 'Fosterhat Williamar', 'Wandper Bapower', 'Elmmos Grangthompson', 'Gandunn Aumrris', 'Gwydvera Mitcheness', 'Merlle Sandore', 'Ronster Elliottshot', 'Harspell Roness', 'Thobus Burpower', 'Crunon Clarkotter', 'Thompsonwand Williamsshot', 'Spenwise Bellelline', 'Filegend Craden', 'Moorerry Freeger', 'Davidalf Dumbleriffiths', 'Gonwizz Granghoward']
+hitpoints = [14, 21, 22, 7, 16, 15, 25, 31, 23, 1, 5, 32, 24, 17, 28, 29, 9, 12, 19, 8, 4, 6, 26, 10, 30, 11, 2, 18, 27, 13, 3, 20]
+
+contestants = []
+
+for i in range(len(names)):
+    #print(i, names[i], hitpoints[i])
+    entry = {}
+    entry["number"] = i + 1
+    entry["name"] = names[i]
+    entry["hitpoints"] = hitpoints[i]
+    entry["slayer"] = 0
+    contestants.append(entry)
+    print("insert into contestant (name,hitpoints) values (\'{}\',{});".format(entry["name"],entry["hitpoints"]))
+
+# for later: throw it all into one python script, use the random.org api,
+# find a name generator that offers an api.
 */
-
-insert into contestant (name,hitpoints) values ('Anfroy',11);
-insert into contestant (name,hitpoints) values ('Bodoloff',2);
-insert into contestant (name,hitpoints) values ('Chrodegang',10);
-insert into contestant (name,hitpoints) values ('Drimylos',1);
-insert into contestant (name,hitpoints) values ('Engelke',5);
-insert into contestant (name,hitpoints) values ('Folcard',9);
-insert into contestant (name,hitpoints) values ('Gilpin',4);
-insert into contestant (name,hitpoints) values ('Hegesandros',13);
-insert into contestant (name,hitpoints) values ('Ixidor',16);
-insert into contestant (name,hitpoints) values ('Jorin',7);
-insert into contestant (name,hitpoints) values ('Kendrick',12);
-insert into contestant (name,hitpoints) values ('Leudbald',6);
-insert into contestant (name,hitpoints) values ('Meginhard',8);
-insert into contestant (name,hitpoints) values ('Nidungus',15);
-insert into contestant (name,hitpoints) values ('Orkatz',14);
-insert into contestant (name,hitpoints) values ('Piligrim',3);
-
-
-select * from contestant;
-
 
