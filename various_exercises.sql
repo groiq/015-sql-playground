@@ -65,3 +65,37 @@ for i in range(len(names)):
 # find a name generator that offers an api.
 */
 
+insert into contestant (name,hitpoints) values ('Bathtson Freeger',14);
+insert into contestant (name,hitpoints) values ('Pointyspen Bellelline',21);
+insert into contestant (name,hitpoints) values ('Jaenstewart Grangdon',22);
+insert into contestant (name,hitpoints) values ('Wickedro Elliottshot',7);
+insert into contestant (name,hitpoints) values ('Hermilawrence Clarkotter',16);
+insert into contestant (name,hitpoints) values ('Harilda Sandore',15);
+insert into contestant (name,hitpoints) values ('Mcdonaldcackle Bapower',25);
+insert into contestant (name,hitpoints) values ('Crawfordbroom Mitcheness',31);
+insert into contestant (name,hitpoints) values ('Thocat Burpower',23);
+insert into contestant (name,hitpoints) values ('Greenhar Roness',1);
+insert into contestant (name,hitpoints) values ('Agadunn Aumrris',5);
+insert into contestant (name,hitpoints) values ('Cacklegordon Williamsshot',32);
+insert into contestant (name,hitpoints) values ('Fostercauldron Williamar',24);
+insert into contestant (name,hitpoints) values ('Hane Grangthompson',17);
+insert into contestant (name,hitpoints) values ('Davintress Dumbleriffiths',28);
+insert into contestant (name,hitpoints) values ('Broomtucker Granghoward',29);
+insert into contestant (name,hitpoints) values ('Fosterhat Williamar',9);
+insert into contestant (name,hitpoints) values ('Wandper Bapower',12);
+insert into contestant (name,hitpoints) values ('Elmmos Grangthompson',19);
+insert into contestant (name,hitpoints) values ('Gandunn Aumrris',8);
+insert into contestant (name,hitpoints) values ('Gwydvera Mitcheness',4);
+insert into contestant (name,hitpoints) values ('Merlle Sandore',6);
+insert into contestant (name,hitpoints) values ('Ronster Elliottshot',26);
+insert into contestant (name,hitpoints) values ('Harspell Roness',10);
+insert into contestant (name,hitpoints) values ('Thobus Burpower',30);
+insert into contestant (name,hitpoints) values ('Crunon Clarkotter',11);
+insert into contestant (name,hitpoints) values ('Thompsonwand Williamsshot',2);
+insert into contestant (name,hitpoints) values ('Spenwise Bellelline',18);
+insert into contestant (name,hitpoints) values ('Filegend Craden',27);
+insert into contestant (name,hitpoints) values ('Moorerry Freeger',13);
+insert into contestant (name,hitpoints) values ('Davidalf Dumbleriffiths',3);
+insert into contestant (name,hitpoints) values ('Gonwizz Granghoward',20);
+
+select * from contestant;
