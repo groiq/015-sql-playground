@@ -7,9 +7,9 @@ Okay, so I need to generate some sort of tree structure.
 
 How about this: I'll model some sort of tournament.
 
-We have a list of contestants, each with a number of hit points. 
+We have a list of contestants, each with a bib_num of hit points. 
 They are pitched against each others in pairs until one is left.
-Contestant with higher hit point number wins. 
+Contestant with higher hit point bib_num wins. 
 
 In the end I'll have a tree of duels.
 
@@ -17,18 +17,18 @@ I'll have 2^n contestants, let's say 16.
 For hit points assigment I'll take the sequence of numbers from 1 to 16
 and randomize it. 
 
-Data-wise, each contestant has a bib number, name, hit points 
+Data-wise, each contestant has a bib bib_num, name, hit points 
 and the contestant who defeated them (called their "slayer"). 
 */
 
 drop table if exists contestant;
 CREATE TABLE contestant (
-    number INTEGER AUTO_INCREMENT PRIMARY KEY,
+    bib_num INTEGER AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(32) UNIQUE NOT NULL,
     hitpoints INTEGER NOT NULL,
     slayer INTEGER,
     FOREIGN KEY (slayer)
-        REFERENCES contestant (number)
+        REFERENCES contestant (bib_num)
 );
 
 /*
@@ -54,7 +54,7 @@ contestants = []
 for i in range(len(names)):
     #print(i, names[i], hitpoints[i])
     entry = {}
-    entry["number"] = i + 1
+    entry["bib_num"] = i + 1
     entry["name"] = names[i]
     entry["hitpoints"] = hitpoints[i]
     entry["slayer"] = 0
@@ -128,16 +128,16 @@ while not winnerFound:
     for candidate in contestants:
         if candidate["slayer"]: continue
         if redCorner:
-            blueCorner = candidate["number"]
+            blueCorner = candidate["bib_num"]
             opponent = contestants[redCorner-1]
             print(opponent["name"], "vs.", candidate["name"])
             if opponent["hitpoints"] > candidate["hitpoints"]:
-                candidate["slayer"] = opponent["number"]
+                candidate["slayer"] = opponent["bib_num"]
             else:
-                opponent["slayer"] = candidate["number"]
+                opponent["slayer"] = candidate["bib_num"]
             redCorner = 0
         else:
-            redCorner = candidate["number"]
+            redCorner = candidate["bib_num"]
     if redCorner:
         winnerFound = True
 */
@@ -149,7 +149,7 @@ generate sql statements:
 /*
 for contestant in contestants:
     if contestant["slayer"]:
-        print("update contestant set slayer = {} where number = {};".format(contestant["slayer"],contestant["number"]))
+        print("update contestant set slayer = {} where bib_num = {};".format(contestant["slayer"],contestant["bib_num"]))
 */
 
 /*
@@ -157,45 +157,45 @@ sql statements:
 */
 
 -- test data
-update contestant set slayer = 2 where number = 1;
-update contestant set slayer = 4 where number = 2;
-update contestant set slayer = 4 where number = 3;
-update contestant set slayer = 8 where number = 4;
-update contestant set slayer = 6 where number = 5;
-update contestant set slayer = 8 where number = 6;
-update contestant set slayer = 8 where number = 7;
+update contestant set slayer = 2 where bib_num = 1;
+update contestant set slayer = 4 where bib_num = 2;
+update contestant set slayer = 4 where bib_num = 3;
+update contestant set slayer = 8 where bib_num = 4;
+update contestant set slayer = 6 where bib_num = 5;
+update contestant set slayer = 8 where bib_num = 6;
+update contestant set slayer = 8 where bib_num = 7;
 
-update contestant set slayer = 2 where number = 1;
-update contestant set slayer = 3 where number = 2;
-update contestant set slayer = 8 where number = 3;
-update contestant set slayer = 3 where number = 4;
-update contestant set slayer = 8 where number = 5;
-update contestant set slayer = 5 where number = 6;
-update contestant set slayer = 8 where number = 7;
-update contestant set slayer = 12 where number = 8;
-update contestant set slayer = 12 where number = 9;
-update contestant set slayer = 9 where number = 10;
-update contestant set slayer = 12 where number = 11;
-update contestant set slayer = 16 where number = 13;
-update contestant set slayer = 13 where number = 14;
-update contestant set slayer = 16 where number = 15;
-update contestant set slayer = 12 where number = 16;
-update contestant set slayer = 18 where number = 17;
-update contestant set slayer = 19 where number = 18;
-update contestant set slayer = 23 where number = 19;
-update contestant set slayer = 19 where number = 20;
-update contestant set slayer = 22 where number = 21;
-update contestant set slayer = 23 where number = 22;
-update contestant set slayer = 25 where number = 23;
-update contestant set slayer = 23 where number = 24;
-update contestant set slayer = 12 where number = 25;
-update contestant set slayer = 25 where number = 26;
-update contestant set slayer = 28 where number = 27;
-update contestant set slayer = 25 where number = 28;
-update contestant set slayer = 25 where number = 29;
-update contestant set slayer = 29 where number = 30;
-update contestant set slayer = 32 where number = 31;
-update contestant set slayer = 29 where number = 32;
+update contestant set slayer = 2 where bib_num = 1;
+update contestant set slayer = 3 where bib_num = 2;
+update contestant set slayer = 8 where bib_num = 3;
+update contestant set slayer = 3 where bib_num = 4;
+update contestant set slayer = 8 where bib_num = 5;
+update contestant set slayer = 5 where bib_num = 6;
+update contestant set slayer = 8 where bib_num = 7;
+update contestant set slayer = 12 where bib_num = 8;
+update contestant set slayer = 12 where bib_num = 9;
+update contestant set slayer = 9 where bib_num = 10;
+update contestant set slayer = 12 where bib_num = 11;
+update contestant set slayer = 16 where bib_num = 13;
+update contestant set slayer = 13 where bib_num = 14;
+update contestant set slayer = 16 where bib_num = 15;
+update contestant set slayer = 12 where bib_num = 16;
+update contestant set slayer = 18 where bib_num = 17;
+update contestant set slayer = 19 where bib_num = 18;
+update contestant set slayer = 23 where bib_num = 19;
+update contestant set slayer = 19 where bib_num = 20;
+update contestant set slayer = 22 where bib_num = 21;
+update contestant set slayer = 23 where bib_num = 22;
+update contestant set slayer = 25 where bib_num = 23;
+update contestant set slayer = 23 where bib_num = 24;
+update contestant set slayer = 12 where bib_num = 25;
+update contestant set slayer = 25 where bib_num = 26;
+update contestant set slayer = 28 where bib_num = 27;
+update contestant set slayer = 25 where bib_num = 28;
+update contestant set slayer = 25 where bib_num = 29;
+update contestant set slayer = 29 where bib_num = 30;
+update contestant set slayer = 32 where bib_num = 31;
+update contestant set slayer = 29 where bib_num = 32;
 
 select * from contestant;
 
@@ -204,7 +204,7 @@ Now, finally, the recursive with statement I'm doing all this for.
 */
 
 with recursive Defeated(loser,winner) as 
-	(select number as loser, slayer as winner from contestant 
+	(select bib_num as loser, slayer as winner from contestant 
     union 
     select Defeated.loser, contestant.slayer as winner from Defeated, contestant 
 		where Defeated.winner = contestant.slayer)
@@ -212,14 +212,14 @@ select loser,winner from Defeated where winner = 8;
 
 /* okay, some simpler queries first... */
 
-select number, slayer from contestant;
+select bib_num, slayer from contestant;
 
 with Defeated(loser,winner) as
-	(select number as loser, slayer as winner from contestant)
+	(select bib_num as loser, slayer as winner from contestant)
     select loser, winner from Defeated;
 
 with Defeated(loser,winner) as
-	(select number as loser, slayer as winner from contestant)
+	(select bib_num as loser, slayer as winner from contestant)
     select loser, winner from Defeated
     where winner = 8;
 
