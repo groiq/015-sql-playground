@@ -203,8 +203,23 @@ select * from contestant;
 Now, finally, the recursive with statement I'm doing all this for.
 */
 
-with recursive Defeated(winner,loser) as 
+with recursive Defeated(loser,winner) as 
 	(select number as loser, slayer as winner from contestant 
     union 
-    select Defeated.loser, contestant.slayer as winner from Defeated, contestant where Defeated.winner = contestant.slayer)
-select loser from Defeated where winner = 12;
+    select Defeated.loser, contestant.slayer as winner from Defeated, contestant 
+		where Defeated.winner = contestant.slayer)
+select loser,winner from Defeated where winner = 8;
+
+/* okay, some simpler queries first... */
+
+select number, slayer from contestant;
+
+with Defeated(loser,winner) as
+	(select number as loser, slayer as winner from contestant)
+    select loser, winner from Defeated;
+
+with Defeated(loser,winner) as
+	(select number as loser, slayer as winner from contestant)
+    select loser, winner from Defeated
+    where winner = 8;
+
