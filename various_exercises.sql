@@ -179,3 +179,13 @@ update contestant set slayer = 32 where number = 31;
 update contestant set slayer = 29 where number = 32;
 
 select * from contestant;
+
+/*
+Now, finally, the recursive with statement I'm doing all this for.
+*/
+
+with recursive Defeated(winner,loser) as 
+	(select number as loser, slayer as winner from contestant 
+    union 
+    select Defeated.loser, contestant.slayer as winner from Defeated, contestant where Defeated.winner = contestant.slayer)
+select loser from Defeated where winner = 12;
