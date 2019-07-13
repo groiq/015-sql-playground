@@ -99,3 +99,35 @@ insert into contestant (name,hitpoints) values ('Davidalf Dumbleriffiths',3);
 insert into contestant (name,hitpoints) values ('Gonwizz Granghoward',20);
 
 select * from contestant;
+
+/*
+For now, I'll calculate the entire tournament in one go
+using the data object in python. 
+Later think of some more refined structure. 
+*/
+
+/*
+Python code to calculate tournament:
+*/
+
+/*
+winnerFound = False
+
+while not winnerFound:
+    redCorner = 0
+    for candidate in contestants:
+        if candidate["slayer"]: continue
+        if redCorner:
+            blueCorner = candidate["number"]
+            opponent = contestants[redCorner-1]
+            print(opponent["name"], "vs.", candidate["name"])
+            if opponent["hitpoints"] > candidate["hitpoints"]:
+                candidate["slayer"] = opponent["number"]
+            else:
+                opponent["slayer"] = candidate["number"]
+            redCorner = 0
+        else:
+            redCorner = candidate["number"]
+    if redCorner:
+        winnerFound = True
+*/
