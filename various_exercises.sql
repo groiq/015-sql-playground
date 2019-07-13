@@ -65,6 +65,16 @@ for i in range(len(names)):
 # find a name generator that offers an api.
 */
 
+-- test data
+insert into contestant (name,hitpoints) values ('1',1);
+insert into contestant (name,hitpoints) values ('2',2);
+insert into contestant (name,hitpoints) values ('3',3);
+insert into contestant (name,hitpoints) values ('4',4);
+insert into contestant (name,hitpoints) values ('5',5);
+insert into contestant (name,hitpoints) values ('6',6);
+insert into contestant (name,hitpoints) values ('7',7);
+insert into contestant (name,hitpoints) values ('8',8);
+
 insert into contestant (name,hitpoints) values ('Bathtson Freeger',14);
 insert into contestant (name,hitpoints) values ('Pointyspen Bellelline',21);
 insert into contestant (name,hitpoints) values ('Jaenstewart Grangdon',22);
@@ -145,6 +155,15 @@ for contestant in contestants:
 /*
 sql statements:
 */
+
+-- test data
+update contestant set slayer = 2 where number = 1;
+update contestant set slayer = 4 where number = 2;
+update contestant set slayer = 4 where number = 3;
+update contestant set slayer = 8 where number = 4;
+update contestant set slayer = 6 where number = 5;
+update contestant set slayer = 8 where number = 6;
+update contestant set slayer = 8 where number = 7;
 
 update contestant set slayer = 2 where number = 1;
 update contestant set slayer = 3 where number = 2;
