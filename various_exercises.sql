@@ -131,3 +131,51 @@ while not winnerFound:
     if redCorner:
         winnerFound = True
 */
+
+/*
+generate sql statements:
+*/
+
+/*
+for contestant in contestants:
+    if contestant["slayer"]:
+        print("update contestant set slayer = {} where number = {};".format(contestant["slayer"],contestant["number"]))
+*/
+
+/*
+sql statements:
+*/
+
+update contestant set slayer = 2 where number = 1;
+update contestant set slayer = 3 where number = 2;
+update contestant set slayer = 8 where number = 3;
+update contestant set slayer = 3 where number = 4;
+update contestant set slayer = 8 where number = 5;
+update contestant set slayer = 5 where number = 6;
+update contestant set slayer = 8 where number = 7;
+update contestant set slayer = 12 where number = 8;
+update contestant set slayer = 12 where number = 9;
+update contestant set slayer = 9 where number = 10;
+update contestant set slayer = 12 where number = 11;
+update contestant set slayer = 16 where number = 13;
+update contestant set slayer = 13 where number = 14;
+update contestant set slayer = 16 where number = 15;
+update contestant set slayer = 12 where number = 16;
+update contestant set slayer = 18 where number = 17;
+update contestant set slayer = 19 where number = 18;
+update contestant set slayer = 23 where number = 19;
+update contestant set slayer = 19 where number = 20;
+update contestant set slayer = 22 where number = 21;
+update contestant set slayer = 23 where number = 22;
+update contestant set slayer = 25 where number = 23;
+update contestant set slayer = 23 where number = 24;
+update contestant set slayer = 12 where number = 25;
+update contestant set slayer = 25 where number = 26;
+update contestant set slayer = 28 where number = 27;
+update contestant set slayer = 25 where number = 28;
+update contestant set slayer = 25 where number = 29;
+update contestant set slayer = 29 where number = 30;
+update contestant set slayer = 32 where number = 31;
+update contestant set slayer = 29 where number = 32;
+
+select * from contestant;
