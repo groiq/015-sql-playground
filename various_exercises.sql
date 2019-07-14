@@ -242,4 +242,16 @@ with recursive
 			where Defeated.winner = contestant.bib_num)
 select loser,winner from Defeated where winner = 4;
 
+with recursive
+	Indir(indir_bib_num) as
+		(select bib_num as indir_bib_num from contestant where bib_num = 4
+        union
+        select bib_num as indir_bib_num
+        from contestant direct_duel, Indir indirect_duel
+        where direct_duel.slayer = indirect_duel.indir_bib_num
+        
+        )
+select indir_bib_num from Indir;
+-- little blemish: this includes the bib_num of the actual contestant themselves, 
+-- not just those they've slain
 
