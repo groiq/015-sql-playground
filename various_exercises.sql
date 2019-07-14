@@ -1,6 +1,10 @@
-/* Various exercises */
+/****************
+Various exercises
+*****************/
 
-/* My first recursive with statement */
+/********************************
+My first recursive with statement
+*********************************/
 
 /*
 Okay, so I need to generate some sort of tree structure.
