@@ -203,15 +203,6 @@ select * from contestant;
 Now, finally, the recursive with statement I'm doing all this for.
 */
 
-with recursive 
-	Defeated(loser,winner) as 
-		(select bib_num as loser, slayer as winner from contestant 
-		union 
-		select Defeated.loser, contestant.slayer as winner 
-		from Defeated, contestant 
-			where Defeated.winner = contestant.bib_num)
-select loser,winner from Defeated order by winner;
-
 /* okay, some simpler queries first... */
 
 select bib_num, slayer from contestant;
@@ -224,4 +215,31 @@ with Defeated(loser,winner) as
 	(select bib_num as loser, slayer as winner from contestant)
     select loser, winner from Defeated
     where winner = 8;
+
+/*
+And now, this is what I'm after. First, a master list:
+*/
+
+with recursive 
+	Defeated(loser,winner) as 
+		(select bib_num as loser, slayer as winner from contestant 
+		union 
+		select Defeated.loser, contestant.slayer as winner 
+		from Defeated, contestant 
+			where Defeated.winner = contestant.bib_num)
+select loser,winner from Defeated order by winner;
+
+/*
+Selecting subtree from one contestant:
+*/
+
+with recursive 
+	Defeated(loser,winner) as 
+		(select bib_num as loser, slayer as winner from contestant 
+		union 
+		select Defeated.loser, contestant.slayer as winner 
+		from Defeated, contestant 
+			where Defeated.winner = contestant.bib_num)
+select loser,winner from Defeated where winner = 4;
+
 
