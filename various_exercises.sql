@@ -269,4 +269,15 @@ select indir_bib_num,bib_num
 from Indir join contestant
 where contestant.bib_num = 4;
 
-
+with recursive
+	Seed(bib_num) as (select bib_num from contestant where bib_num = 4),
+	Indir(indir_bib_num) as
+		(select contestant.bib_num as indir_bib_num from contestant,Seed where contestant.slayer = Seed.bib_num
+        union
+        select bib_num as indir_bib_num
+        from contestant direct_duel, Indir indirect_duel
+        where direct_duel.slayer = indirect_duel.indir_bib_num
+        
+        )
+select indir_bib_num,bib_num 
+from Indir join Seed;
