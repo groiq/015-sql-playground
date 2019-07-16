@@ -530,4 +530,58 @@ on indirect.indirectBack = waiting_in_line.waitingID
 group by indirectBack
 ;
 
+/*
+I guess I need to simplify the example even more
+for use as a cheat sheet. 
+(simplified mainly in the terminology.)
+*/
+
+/* Setup: */
+
+drop table if exists direct;
+CREATE TABLE direct (
+    directFront INTEGER PRIMARY KEY AUTO_INCREMENT,
+    directBack INTEGER,
+    FOREIGN KEY (directBack)
+        REFERENCES direct (directFront)
+);
+
+insert into direct () values ();
+insert into direct () values ();
+insert into direct () values ();
+insert into direct () values ();
+
+update direct set directBack = null where directFront > 0; -- reset FK
+
+update direct as front inner join direct as back
+set front.directBack = back.directFront
+where front.directFront = back.directFront - 1;
+
+select * from direct order by directFront;
+
+/* query: */
+
+with recursive
+	indirect(indirectFront,indirectBack) as
+		(select directFront as indirectFront, directBack as indirectBack from direct
+        union
+        select indirect.indirectFront as indirectFront, direct.directBack as indirectBack
+        from direct join indirect
+        on direct.directFront = indirect.indirectBack
+        )
+select indirectFront,indirectBack
+from indirect
+order by indirectFront,indirectBack
+;
+
+/*
+Little blemish: Because I have a pair 4-null,
+null is supposed to be the *last* element,
+but since the system considers null smaller than a number,
+it's displayed as the *first*.
+That happens when you relate by successor rather than antecedant. 
+Asking for the *start* of the sequence might have been more elegant after all.
+But apart from that, this works as I wanted. 
+*/
+
 
