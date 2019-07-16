@@ -285,3 +285,28 @@ with recursive
         )
 select indir_bib_num,bib_num 
 from Indir join Seed;
+
+/************************
+Simpler recursion example
+*************************/
+
+/*
+
+A simpler example, suggested by essentialsql following Aaron Krolik. 
+It uses a line rather than a tree. 
+
+Sources:
+https://www.quora.com/How-should-I-explain-recursion-to-a-4-year-old
+via https://www.essentialsql.com/recursive-ctes-explained/
+
+You are waiting in a line and wondering how many people are in front of you.
+Each person in the line has access to the previous one. 
+The position can be determined by these instructions:
+
+- When trying to find out your number, ask the person in front for theirs.
+- When told a number, add 1 
+- When nobody is in front of you, assume you were given the number zero. 
+
+
+
+*/
