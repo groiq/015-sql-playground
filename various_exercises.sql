@@ -307,7 +307,8 @@ The position can be determined by these instructions:
 - When told a number, add 1 
 - When nobody is in front of you, assume you were given the number zero. 
 
-
+So, I'll have a table of people queueing; 
+each one has an id, name and an fk to the one queueing in front of them... 
 
 */
 
@@ -348,6 +349,10 @@ insert into waiting_in_line (name) values ('Y');
 insert into waiting_in_line (name) values ('Z');
 
 /*
+That was the waiting people themselves. Now I need to fill in the foreing keys. 
+
+For simplicity, I'll just generate a queue sorted by ids.
+
 I think my SQL is enough to generate a queue without a scripting language...
 */
 
@@ -375,6 +380,11 @@ select * from waiting_in_line;
 -- okay, a bit dirty:
 update waiting_in_line set previousID = waitingID - 1 where waitingID > 1;
 
+-- this works, but I'm not satisfied. I want to make the proper query work.
+
+-- reset table
+update waiting_in_line set previousID = null where waitingID < 100;
+
 -- this works as expected:
 SELECT 
     *
@@ -385,7 +395,10 @@ WHERE
             waitingID
         FROM
             waiting_in_line);
-            
+ 
+-- It appears that I'm trying to reference a table within its own update statement,
+-- and that way lies madness. 
+ 
 -- try with aliases?
 UPDATE waiting_in_line target
 SET 
@@ -398,17 +411,33 @@ WHERE
 
 -- nope, doesn't fool sql.
 
--- reset table
-update waiting_in_line set previousID = null where waitingID < 100;
-
 /*
 advice from 
 https://stackoverflow.com/questions/45494/mysql-error-1093-cant-specify-target-table-for-update-in-from-clause
 */
 
-select * from waiting_in_line as a inner join waiting_in_line as b on a.waitingID = b.waitingID;
-select * from waiting_in_line as front join waiting_in_line as back on front.waitingID = back.waitingID - 1;
-select front.name,back.name from waiting_in_line as front join waiting_in_line as back on front.waitingID = back.waitingID - 1;
+-- first, try the basic structure as a select statement... 
+
+SELECT 
+    *
+FROM
+    waiting_in_line AS a
+        INNER JOIN
+    waiting_in_line AS b ON a.waitingID = b.waitingID;
+SELECT 
+    *
+FROM
+    waiting_in_line AS front
+        JOIN
+    waiting_in_line AS back ON front.waitingID = back.waitingID - 1;
+SELECT 
+    front.name, back.name
+FROM
+    waiting_in_line AS front
+        JOIN
+    waiting_in_line AS back ON front.waitingID = back.waitingID - 1;
+
+-- right, now onto the update
 
 -- this doesn't work because safe update mode doesn't let me update without a WHERE clause. 
 UPDATE waiting_in_line AS front
@@ -428,7 +457,12 @@ WHERE
     back.waitingID = front.waitingID + 1;
 
 select * from waiting_in_line;
-select front.name,back.name from waiting_in_line as front join waiting_in_line as back on front.waitingID = back.waitingID - 1;
+SELECT 
+    front.name, back.name
+FROM
+    waiting_in_line AS front
+        JOIN
+    waiting_in_line AS back ON front.waitingID = back.waitingID - 1;
 
 /*
 Wait... that actually *worked*? And the results were *right*? 
@@ -440,5 +474,60 @@ This doesn't make sense!
 
 I'll have to review what was going on there.
 */
+
+/*
+But first, the actual recursive query...
+*/
+
+with recursive line_positions(waitingID) as (select waitingID from waiting_in_line)
+select * from line_positions join waiting_in_line using(waitingID);
+
+with recursive 
+	indirect(indirectFront,indirectBack) as 
+		(select previousID as directFront,waitingID as directBack from waiting_in_line
+         union
+        select waiting_in_line.previousID as indirectFront, indirect.indirectBack as indirectBack
+        from waiting_in_line join indirect
+        on waiting_in_line.waitingID = indirect.indirectFront
+        )
+select * 
+from indirect
+order by indirectBack,indirectFront;
+
+/*
+Okay, so now I have a list of all the pairings. 
+Now I have to aggregate them:
+*/
+
+with recursive 
+	indirect(indirectFront,indirectBack) as 
+		(select previousID as directFront,waitingID as directBack from waiting_in_line
+         union
+        select waiting_in_line.previousID as indirectFront, indirect.indirectBack as indirectBack
+        from waiting_in_line join indirect
+        on waiting_in_line.waitingID = indirect.indirectFront
+        )
+select count(*) as position, indirectBack
+from indirect
+group by indirectBack
+;
+
+/*
+and joining back with the original table...
+*/
+
+with recursive 
+	indirect(indirectFront,indirectBack) as 
+		(select previousID as directFront,waitingID as directBack from waiting_in_line
+         union
+        select waiting_in_line.previousID as indirectFront, indirect.indirectBack as indirectBack
+        from waiting_in_line join indirect
+        on waiting_in_line.waitingID = indirect.indirectFront
+        )
+select count(*) as position, name
+from indirect join waiting_in_line
+on indirect.indirectBack = waiting_in_line.waitingID
+group by indirectBack
+;
 
 
