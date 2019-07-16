@@ -310,3 +310,135 @@ The position can be determined by these instructions:
 
 
 */
+
+drop table if exists waiting_in_line;
+CREATE TABLE waiting_in_line (
+    waitingID INTEGER AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(2) UNIQUE NOT NULL,
+    previousID INTEGER,
+    FOREIGN KEY (previousID)
+        REFERENCES waiting_in_line (waitingID)
+);
+
+insert into waiting_in_line (name) values ('A');
+insert into waiting_in_line (name) values ('B');
+insert into waiting_in_line (name) values ('C');
+insert into waiting_in_line (name) values ('D');
+insert into waiting_in_line (name) values ('E');
+insert into waiting_in_line (name) values ('F');
+insert into waiting_in_line (name) values ('G');
+insert into waiting_in_line (name) values ('H');
+insert into waiting_in_line (name) values ('I');
+insert into waiting_in_line (name) values ('J');
+insert into waiting_in_line (name) values ('K');
+insert into waiting_in_line (name) values ('L');
+insert into waiting_in_line (name) values ('M');
+insert into waiting_in_line (name) values ('N');
+insert into waiting_in_line (name) values ('O');
+insert into waiting_in_line (name) values ('P');
+insert into waiting_in_line (name) values ('Q');
+insert into waiting_in_line (name) values ('R');
+insert into waiting_in_line (name) values ('S');
+insert into waiting_in_line (name) values ('T');
+insert into waiting_in_line (name) values ('U');
+insert into waiting_in_line (name) values ('V');
+insert into waiting_in_line (name) values ('W');
+insert into waiting_in_line (name) values ('X');
+insert into waiting_in_line (name) values ('Y');
+insert into waiting_in_line (name) values ('Z');
+
+/*
+I think my SQL is enough to generate a queue without a scripting language...
+*/
+
+SELECT 
+    front.name AS front, back.name AS back
+FROM
+    waiting_in_line front
+        JOIN
+    waiting_in_line back
+WHERE
+    back.waitingID = front.waitingID + 1;
+    
+-- this doesn't work:
+UPDATE waiting_in_line 
+SET 
+    previousID = waitingID - 1
+WHERE
+    (waitingID - 1) IN (SELECT 
+            waitingID
+        FROM
+            waiting_in_line);
+
+select * from waiting_in_line;
+
+-- okay, a bit dirty:
+update waiting_in_line set previousID = waitingID - 1 where waitingID > 1;
+
+-- this works as expected:
+SELECT 
+    *
+FROM
+    waiting_in_line
+WHERE
+    (waitingID - 1) IN (SELECT 
+            waitingID
+        FROM
+            waiting_in_line);
+            
+-- try with aliases?
+UPDATE waiting_in_line target
+SET 
+    previousID = waitingID - 1
+WHERE
+    (waitingID - 1) IN (SELECT 
+            waitingID
+        FROM
+            waiting_in_line source);
+
+-- nope, doesn't fool sql.
+
+-- reset table
+update waiting_in_line set previousID = null where waitingID < 100;
+
+/*
+advice from 
+https://stackoverflow.com/questions/45494/mysql-error-1093-cant-specify-target-table-for-update-in-from-clause
+*/
+
+select * from waiting_in_line as a inner join waiting_in_line as b on a.waitingID = b.waitingID;
+select * from waiting_in_line as front join waiting_in_line as back on front.waitingID = back.waitingID - 1;
+select front.name,back.name from waiting_in_line as front join waiting_in_line as back on front.waitingID = back.waitingID - 1;
+
+-- this doesn't work because safe update mode doesn't let me update without a WHERE clause. 
+UPDATE waiting_in_line AS front
+        INNER JOIN
+    waiting_in_line AS back ON front.waitingID = back.waitingID - 1 
+SET 
+    back.previousID = front.waitingID;
+
+-- so, redo the update and use the join on as the where clause:
+
+UPDATE waiting_in_line AS front
+        INNER JOIN
+    waiting_in_line AS back 
+SET 
+    back.previousID = front.waitingID
+WHERE
+    back.waitingID = front.waitingID + 1;
+
+select * from waiting_in_line;
+select front.name,back.name from waiting_in_line as front join waiting_in_line as back on front.waitingID = back.waitingID - 1;
+
+/*
+Wait... that actually *worked*? And the results were *right*? 
+Butbutbut... But if I update on table C that's the result of joining tables A and B,
+how can I address table A in the update statement?
+And if I join a table with itself, but on *different rows*,
+then how come I can update a field and it is written into the correct row?
+This doesn't make sense!
+
+I'll have to review what was going on there.
+*/
+
+
