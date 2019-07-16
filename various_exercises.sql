@@ -584,4 +584,20 @@ Asking for the *start* of the sequence might have been more elegant after all.
 But apart from that, this works as I wanted. 
 */
 
+/*
+For later for the queue example:
+
+I want to know not how many people are before me, but how long it takes.
+Each person can tell me what they are here for. 
+I can give reasonable estimates as to how long each treatment/appointment will take. 
+Have a table of appointments with their durations. 
+Calculate total time. 
+
+Imagine multiple queues.
+Nothing to do with data structure,
+just needs multiple people with a null predecessor. 
+Calculate duration for each line and pick the shortest.
+Note that for this I'll have to identify the people who are at the end of the line.
+(group by who shares a first indirect predecessor.)
+*/
 
