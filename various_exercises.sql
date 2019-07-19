@@ -601,3 +601,21 @@ Note that for this I'll have to identify the people who are at the end of the li
 (group by who shares a first indirect predecessor.)
 */
 
+/*
+for later:
+
+Can I rework the queue example with nonlinear recursion?
+
+Find an example for mutual recursion. 
+
+Maybe: A list of countries/fiefdoms/houses, some of which are at war with each other.
+A is at war with B, and they want to find out who is at war with whom,
+assuming that an enemy of X will ally with another enemy of X.
+
+Which SQL implementations do support nonlinear and/or mutual recursion at the time?
+
+Here's a paper from a team that wrote an implementation 
+that can be integrated into *various database systems*:
+https://www.fdi.ucm.es/profesor/fernan/FSP/ANSS13c.pdf
+*/
+
