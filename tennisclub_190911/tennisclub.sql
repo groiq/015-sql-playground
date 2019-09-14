@@ -781,10 +781,64 @@ order by
 	player_name,
 	comp_designation;
 
+drop view if exists game_stats;
+
+create view game_stats as
+ select
+	game_id,
+	comp_id,
+	sets,
+	sets_won,
+	sets_lost,
+	case when sets_lost = sets_won then 'X' when sets_won > sets_lost then '1' else '2' end as result,
+	case when (sets_won + sets_lost) < sets then 0 else 1 end as finished
+from
+	game;
+
+select * from game_stats;
+
+select comp_id,game_id,sets,sets_won,sets_lost,result,finished,games from game_stats join competition using (comp_id);
+
+select comp_id,count(*) as finished_games from game_stats where finished = 1 group by comp_id;
+-- select comp_id, (select count(*) from game_stats where finished = 1) from game_stats group by comp_id;
+select count(*) from game_stats where finished = 1 group by comp_id;
+select count(*) as finished_games from game_stats where finished = 1 group by comp_id;
+
+select comp_id, finished_games
+from 
+competition join
+(select comp_id, count(*) as finished_games from game_stats where finished = 1 group by comp_id) finished_stats
+using (comp_id) join
+(select comp_id, count(*) as unfinished_games from game_stats where finished = 0 group by comp_id) unfinished_stats
+using (comp_id)
+;
+
+drop view if exists comp_stats;
+
+-- create view comp_stats as
+select
+	comp_id,
+	
+	result,
+	finished,
+	games
+from
+	game_stats
+join competition
+		using (comp_id);
+
+-- On first try I include comp_id in the game_stats view, so I can generate comp_stats by joining competition and game_stats
+-- (i.e. without doing an extra join with game).
+-- Can I also do it by joining competition and game and fetching the game_stats data in subselects?
+
+	
+-- select * from comp_stats;
+
 drop view if exists games_overview;
 
 create view games_overview as
 select
+	game_id,
 	comp_id,
 	player_id,
 	comp_designation,
@@ -810,9 +864,15 @@ join player
 		using (player_id);
 	
 select * from games_overview;	
+
+select comp_id, finished, result from games_overview;
+
+select comp_id, team_id, comp_designation, team_name, comp_opponent, finished, result from games_overview join competition using (comp_id) join team using (team_id);
 	
 -- create view competitions_overview as
  select
+ 	comp_id,
+ 	team_id,
 	comp_designation,
 	team_name,
 	comp_opponent
