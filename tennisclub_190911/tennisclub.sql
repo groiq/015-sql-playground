@@ -759,32 +759,74 @@ Insert into game (player_id, game_opponent, comp_id, sets, sets_won, sets_lost) 
 select * from game;
 
 
--- create view competitions_overview as
- select
-	comp_designation,
-	team_name,
-	comp_opponent
-from
-	competition
-join team
-		using (team_id);
 
 select case when sets_won > sets_lost then 1 else 0 end as winner from game;
 
 
--- create view games_overview as
+-- create view team_members as
+ select
+	team_name,
+	player_name,
+	comp_designation
+from
+	player
+join game
+		using (player_id)
+join competition
+		using (comp_id)
+join team
+		using (team_id)
+order by
+	team_name,
+	player_name,
+	comp_designation;
+
+drop view if exists games_overview;
+
+create view games_overview as
 select
+	comp_id,
+	player_id,
 	comp_designation,
 	player_name,
 	game_opponent,
 	sets,
 	sets_won,
 	sets_lost,
-	case when sets_won + sets_lost < sets then 0 else 1 end as finished,
-	case when sets_won > sets_lost then 1 else 0 end as won
+	case
+		when sets_won + sets_lost < sets then 0
+		else 1
+	end as finished,
+	case
+		when sets_won = sets_lost then 'X'
+		when sets_won > sets_lost then '1'
+		else '2'
+	end as result
 from
 	game
 join competition
 		using (comp_id)
 join player
 		using (player_id);
+	
+select * from games_overview;	
+	
+-- create view competitions_overview as
+ select
+	comp_designation,
+	team_name,
+	comp_opponent
+	-- result - with unfinished
+	-- games won
+	-- games lost
+	-- draws
+	-- result - finished only
+	-- games won
+	-- games lost
+	-- draws
+	-- todo: results, competition finished, competition won.
+from
+	competition
+join team
+		using (team_id);
+	
