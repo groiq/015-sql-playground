@@ -310,46 +310,46 @@ insert into team (team_name, captain) values ('Lion, steller''s sea', 156);
 
 -- select team_name, player_name as captain from player join team on player.player_id = team.captain;
 
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Greece', 'Prickly Bog Sedge', 7, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Portugal', 'Dacite Manzanita', 11, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Bahia', 6, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Philippines', 'Heartleaf Twistflower', 5, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Pakistan', 'Gold Coast Jasmine', 17, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Indonesia', 'Tolmie''s Penstemon', 5, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Mexico', 'Smallanthus', 11, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Uganda', 'Tulare Gooseberry', 13, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Kazakhstan', 'Arabian Coffee', 19, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Uzbekistan', 'Sobralia', 12, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Malta', 'Othake', 13, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Greece', 'Gray Globemallow', 15, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Palmer''s Monkeyflower', 2, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('France', 'Orange Lichen', 2, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Sticky Monkeyflower', 9, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Russia', 'Shrubby Lespedeza', 3, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Tajikistan', 'Glandular False Calico', 3, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Yellow Prickle', 17, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Fewflower Meadow-rue', 15, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Hoffmann''s Buckwheat', 18, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Luxembourg', 'Longbeard Mariposa Lily', 6, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Jackfruit', 17, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Serbia', 'Oahu False Ohelo', 5, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Croatia', 'Sticky Cinquefoil', 3, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Indonesia', 'Alliaria', 2, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Belarus', 'Peters'' Blackthread Lichen', 13, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Canada', 'Brachythecium Moss', 17, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Cracked Lichen', 19, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('New Zealand', 'Lodgepole Lupine', 10, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Philippines', 'Dicranum Moss', 7, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Thailand', 'Isopterygium Moss', 20, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Russia', 'Klamath Erigeron', 10, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Narrowleaf Bedstraw', 15, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Hammitt''s Claycress', 6, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Japan', 'Broom', 6, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Brazil', 'Thinleaf Alder', 3, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Brazil', 'Neoparrya', 19, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Vietnam', 'Tepary Bean', 11, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Philippines', 'Boxelder', 1, 10);
-insert into competition (comp_designation, comp_opponent, team_id, games) values ('Croatia', 'Utah Agave', 3, 10);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Greece', 'Prickly Bog Sedge', 7, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Portugal', 'Dacite Manzanita', 11, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Bahia', 6, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Philippines', 'Heartleaf Twistflower', 5, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Pakistan', 'Gold Coast Jasmine', 17, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Indonesia', 'Tolmie''s Penstemon', 5, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Mexico', 'Smallanthus', 11, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Uganda', 'Tulare Gooseberry', 13, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Kazakhstan', 'Arabian Coffee', 19, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Uzbekistan', 'Sobralia', 12, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Malta', 'Othake', 13, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Greece', 'Gray Globemallow', 15, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Palmer''s Monkeyflower', 2, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('France', 'Orange Lichen', 2, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Sticky Monkeyflower', 9, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Russia', 'Shrubby Lespedeza', 3, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Tajikistan', 'Glandular False Calico', 3, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Yellow Prickle', 17, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Fewflower Meadow-rue', 15, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Hoffmann''s Buckwheat', 18, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Luxembourg', 'Longbeard Mariposa Lily', 6, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Jackfruit', 17, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Serbia', 'Oahu False Ohelo', 5, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Croatia', 'Sticky Cinquefoil', 3, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Indonesia', 'Alliaria', 2, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Belarus', 'Peters'' Blackthread Lichen', 13, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Canada', 'Brachythecium Moss', 17, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Cracked Lichen', 19, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('New Zealand', 'Lodgepole Lupine', 10, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Philippines', 'Dicranum Moss', 7, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Thailand', 'Isopterygium Moss', 20, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Russia', 'Klamath Erigeron', 10, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Narrowleaf Bedstraw', 15, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('China', 'Hammitt''s Claycress', 6, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Japan', 'Broom', 6, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Brazil', 'Thinleaf Alder', 3, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Brazil', 'Neoparrya', 19, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Vietnam', 'Tepary Bean', 11, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Philippines', 'Boxelder', 1, 40);
+insert into competition (comp_designation, comp_opponent, team_id, games) values ('Croatia', 'Utah Agave', 3, 40);
 
 -- select team_name, comp_designation, comp_opponent, games from competition join team using (team_id);
 
@@ -788,6 +788,7 @@ create view game_stats as
 	game_id,
 	comp_id,
 	sets,
+	sets_won + sets_lost as sets_played,
 	sets_won,
 	sets_lost,
 	case when sets_lost = sets_won then 'X' when sets_won > sets_lost then '1' else '2' end as result,
@@ -804,7 +805,7 @@ select comp_id,count(*) as finished_games from game_stats where finished = 1 gro
 select count(*) from game_stats where finished = 1 group by comp_id;
 select count(*) as finished_games from game_stats where finished = 1 group by comp_id;
 
-select comp_id, finished_games
+select comp_id, finished_games, unfinished_games
 from 
 competition join
 (select comp_id, count(*) as finished_games from game_stats where finished = 1 group by comp_id) finished_stats
@@ -818,13 +819,22 @@ drop view if exists comp_stats;
 -- create view comp_stats as
 select
 	comp_id,
-	
-	result,
-	finished,
+-- 	result as game_result,
+-- 	finished as game_finished,
+	draws_all,
+	finished_games,
+	games - finished_games as unfinished_games,
 	games
 from
-	game_stats
-join competition
+-- 	game_stats
+-- join 
+(select comp_id, count(*) as draws_all from game_stats where result = 'X' group by comp_id) x_stats
+-- using(comp_id)
+join
+(select comp_id, count(*) as finished_games from game_stats where finished = 1 group by comp_id) finished_stats
+using (comp_id) 
+join
+competition
 		using (comp_id);
 
 -- On first try I include comp_id in the game_stats view, so I can generate comp_stats by joining competition and game_stats
