@@ -911,6 +911,18 @@ select * from comp_stats;
 
 drop view if exists games_overview;
 
--- create games_overview
+create view games_overview as
+select player_name, game_opponent, comp_designation, game.sets, sets_played, game.sets_won, game.sets_lost, result, finished  
+from game_stats join game using (game_id) join player using (player_id) join competition on (game.comp_id = competition.comp_id);
 
--- create competition overview
+select * from games_overview;
+
+drop view if exists comp_overview;
+
+create view comp_overview as
+select team_name, comp_designation, comp_opponent, competition.games, finished_games, unfinished_games, finished, result_finished, won_finished, lost_finished, draw_finished, result_all, won_all, lost_all, draw_all
+from comp_stats join competition using (comp_id) join team using (team_id);
+
+select * from comp_overview;
+
+
