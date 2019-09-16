@@ -909,62 +909,8 @@ select * from comp_stats;
 -- (i.e. without doing an extra join with game).
 -- Can I also do it by joining competition and game and fetching the game_stats data in subselects?
 
-	
--- select * from comp_stats;
-
 drop view if exists games_overview;
 
-create view games_overview as
-select
-	game_id,
-	comp_id,
-	player_id,
-	comp_designation,
-	player_name,
-	game_opponent,
-	sets,
-	sets_won,
-	sets_lost,
-	case
-		when sets_won + sets_lost < sets then 0
-		else 1
-	end as finished,
-	case
-		when sets_won = sets_lost then 'X'
-		when sets_won > sets_lost then '1'
-		else '2'
-	end as result
-from
-	game
-join competition
-		using (comp_id)
-join player
-		using (player_id);
-	
-select * from games_overview;	
+-- create games_overview
 
-select comp_id, finished, result from games_overview;
-
-select comp_id, team_id, comp_designation, team_name, comp_opponent, finished, result from games_overview join competition using (comp_id) join team using (team_id);
-	
--- create view competitions_overview as
- select
- 	comp_id,
- 	team_id,
-	comp_designation,
-	team_name,
-	comp_opponent
-	-- result - with unfinished
-	-- games won
-	-- games lost
-	-- draws
-	-- result - finished only
-	-- games won
-	-- games lost
-	-- draws
-	-- todo: results, competition finished, competition won.
-from
-	competition
-join team
-		using (team_id);
-	
+-- create competition overview
