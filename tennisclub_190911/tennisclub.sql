@@ -816,27 +816,95 @@ using (comp_id)
 
 drop view if exists comp_stats;
 
--- create view comp_stats as
-select
+
+create view comp_stats as
+ select
 	comp_id,
--- 	result as game_result,
--- 	finished as game_finished,
-	draws_all,
+	games,
 	finished_games,
 	games - finished_games as unfinished_games,
-	games
+	case
+		when finished_games = games then 1
+		else 0
+	end as finished,
+	case
+		when won_finished > lost_finished then '1'
+		when lost_finished > won_finished then '2'
+		else 'X'
+	end as result_finished,
+	won_finished,
+	lost_finished,
+	finished_games - (won_finished + lost_finished) as draw_finished,
+	case
+		when won_all > lost_all then '1'
+		when lost_all > won_all then '2'
+		else 'X'
+	end as result_all,
+	won_all,
+	lost_all,
+	games - (won_all + lost_all) as draw_all
 from
--- 	game_stats
--- join 
-(select comp_id, count(*) as draws_all from game_stats where result = 'X' group by comp_id) x_stats
--- using(comp_id)
-join
-(select comp_id, count(*) as finished_games from game_stats where finished = 1 group by comp_id) finished_stats
-using (comp_id) 
-join
-competition
+	(
+	select
+		comp_id,
+		count(*) as finished_games
+	from
+		game_stats
+	where
+		finished = 1
+	group by
+		comp_id) finished_stats
+join (
+	select
+		comp_id,
+		count(*) as won_finished
+	from
+		game_stats
+	where
+		finished = 1
+		and result = '1'
+	group by
+		comp_id) won_fin_stats
+		using (comp_id)
+join (
+	select
+		comp_id,
+		count(*) as lost_finished
+	from
+		game_stats
+	where
+		finished = 1
+		and result = '2'
+	group by
+		comp_id) lost_fin_stats
+		using (comp_id)
+join (
+	select
+		comp_id,
+		count(*) as won_all
+	from
+		game_stats
+	where
+		result = '1'
+	group by
+		comp_id) won_all_stats
+		using (comp_id)
+join (
+	select
+		comp_id,
+		count(*) as lost_all
+	from
+		game_stats
+	where
+		result = '2'
+	group by
+		comp_id) lost_all_stats
+		using (comp_id)
+join competition
 		using (comp_id);
 
+select * from comp_stats;
+	
 -- On first try I include comp_id in the game_stats view, so I can generate comp_stats by joining competition and game_stats
 -- (i.e. without doing an extra join with game).
 -- Can I also do it by joining competition and game and fetching the game_stats data in subselects?
