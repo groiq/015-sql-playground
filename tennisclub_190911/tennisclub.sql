@@ -234,6 +234,8 @@ from comp_stats join competition using (comp_id) join team using (team_id);
 /*
  * Sample data
  * -----------
+ *
+ * Sample data provided by https://mockaroo.com/
  */
 
 insert into player (player_name) values ('Anaé');
