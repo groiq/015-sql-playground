@@ -1,9 +1,28 @@
+/*
+ * DB for a tennis club.
+ * 
+ * Assumes that various teams play in competitions against other clubs
+ * and that a competition consists of multiple single-player matches, 
+ * with multiple sets per match.
+ * 
+ * Tracks game and competition results.
+ * Features views for competition and game overviews.
+ * 
+ * Aim was an exercise in view definition.
+ */
+
+-- Later: Design some proper test data.
+
+-- Uncomment to set up database from the beginning. Use with caution.
 drop database if exists tennisclub;
 create database tennisclub;
 
 use tennisclub;
 
--- create tables
+/*
+ * Tables
+ * ------
+ */
 
 create table player (player_id int primary key auto_increment, player_name varcharacter(32));
 
@@ -12,6 +31,7 @@ create table team (team_id int primary key auto_increment, team_name varcharacte
 -- If a captain quits, the team is left without a captain. 
 
 -- later: proper on-update-delete restrictions.
+-- (skipped those for now and focused on the views.)
 
 create table competition (comp_id int primary key auto_increment,
 comp_designation varcharacter(32),
@@ -19,7 +39,6 @@ team_id int,
 comp_opponent varcharacter(32),
 games int,
 foreign key (team_id) references team (team_id));
-
 
 create table game (game_id int primary key auto_increment,
 player_id int,
@@ -31,6 +50,191 @@ sets_lost int,
 foreign key (player_id) references player (player_id),
 foreign key (comp_id) references competition (comp_id) );
 
+/*
+ * Views
+ * -----
+ * 
+ * First I create a view that calculates all stats for a game,
+ * and then another with stats for a competition.
+ * 
+ * Then I set up two views for overviews with all the varchar data
+ * (player and team names and such).f
+ * 
+ */
+
+drop view if exists team_members;
+
+create view team_members as
+ select
+	team_name,
+	player_name,
+	comp_designation
+from
+	player
+join game
+		using (player_id)
+join competition
+		using (comp_id)
+join team
+		using (team_id)
+order by
+	team_name,
+	player_name,
+	comp_designation;
+
+drop view if exists game_stats;
+
+create view game_stats as
+ select
+	game_id,
+	comp_id,
+	sets,
+	sets_won + sets_lost as sets_played,
+	sets_won,
+	sets_lost,
+	case when sets_lost = sets_won then 'X' when sets_won > sets_lost then '1' else '2' end as result,
+	case when (sets_won + sets_lost) < sets then 0 else 1 end as finished
+from
+	game;
+
+-- select * from game_stats;
+
+/*
+ * some partial queries from writing the comp stats view
+ */
+
+-- select comp_id,game_id,sets,sets_won,sets_lost,result,finished,games from game_stats join competition using (comp_id);
+-- 
+-- select comp_id,count(*) as finished_games from game_stats where finished = 1 group by comp_id;
+-- select comp_id, (select count(*) from game_stats where finished = 1) from game_stats group by comp_id;
+-- select count(*) from game_stats where finished = 1 group by comp_id;
+-- select count(*) as finished_games from game_stats where finished = 1 group by comp_id;
+-- 
+-- select comp_id, finished_games, unfinished_games
+-- from 
+-- competition join
+-- (select comp_id, count(*) as finished_games from game_stats where finished = 1 group by comp_id) finished_stats
+-- using (comp_id) join
+-- (select comp_id, count(*) as unfinished_games from game_stats where finished = 0 group by comp_id) unfinished_stats
+-- using (comp_id)
+-- ;
+
+drop view if exists comp_stats;
+
+create view comp_stats as
+ select
+	comp_id,
+	games,
+	finished_games,
+	games - finished_games as unfinished_games,
+	case
+		when finished_games = games then 1
+		else 0
+	end as finished,
+	case
+		when won_finished > lost_finished then '1'
+		when lost_finished > won_finished then '2'
+		else 'X'
+	end as result_finished,
+	won_finished,
+	lost_finished,
+	finished_games - (won_finished + lost_finished) as draw_finished,
+	case
+		when won_all > lost_all then '1'
+		when lost_all > won_all then '2'
+		else 'X'
+	end as result_all,
+	won_all,
+	lost_all,
+	games - (won_all + lost_all) as draw_all
+from
+	(
+	select
+		comp_id,
+		count(*) as finished_games
+	from
+		game_stats
+	where
+		finished = 1
+	group by
+		comp_id) finished_stats
+join (
+	select
+		comp_id,
+		count(*) as won_finished
+	from
+		game_stats
+	where
+		finished = 1
+		and result = '1'
+	group by
+		comp_id) won_fin_stats
+		using (comp_id)
+join (
+	select
+		comp_id,
+		count(*) as lost_finished
+	from
+		game_stats
+	where
+		finished = 1
+		and result = '2'
+	group by
+		comp_id) lost_fin_stats
+		using (comp_id)
+join (
+	select
+		comp_id,
+		count(*) as won_all
+	from
+		game_stats
+	where
+		result = '1'
+	group by
+		comp_id) won_all_stats
+		using (comp_id)
+join (
+	select
+		comp_id,
+		count(*) as lost_all
+	from
+		game_stats
+	where
+		result = '2'
+	group by
+		comp_id) lost_all_stats
+		using (comp_id)
+join competition
+		using (comp_id);
+
+-- select * from comp_stats;
+	
+-- On first try I include comp_id in the game_stats view, so I can generate comp_stats by joining competition and game_stats
+-- (i.e. without doing an extra join with game).
+-- for later: I could make game_stats without comp_id, then for comp_stats I join game_stats with game 
+-- and draw all my aggregates from the resulting table.
+
+
+drop view if exists game_overview;
+
+create view game_overview as
+select player_name, game_opponent, comp_designation, game.sets, sets_played, game.sets_won, game.sets_lost, result, finished  
+from game_stats join game using (game_id) join player using (player_id) join competition on (game.comp_id = competition.comp_id);
+
+-- select * from game_overview;
+
+drop view if exists comp_overview;
+
+create view comp_overview as
+select team_name, comp_designation, comp_opponent, competition.games, finished_games, unfinished_games, finished, result_finished, won_finished, lost_finished, draw_finished, result_all, won_all, lost_all, draw_all
+from comp_stats join competition using (comp_id) join team using (team_id);
+
+-- select * from comp_overview;
+
+/*
+ * Sample data
+ * -----------
+ */
 
 insert into player (player_name) values ('Anaé');
 insert into player (player_name) values ('Mégane');
@@ -307,7 +511,6 @@ insert into team (team_name, captain) values ('Wild water buffalo', 163);
 insert into team (team_name, captain) values ('Lion, steller''s sea', 156);
 
 -- select * from team;
-
 -- select team_name, player_name as captain from player join team on player.player_id = team.captain;
 
 insert into competition (comp_designation, comp_opponent, team_id, games) values ('Greece', 'Prickly Bog Sedge', 7, 40);
@@ -352,8 +555,6 @@ insert into competition (comp_designation, comp_opponent, team_id, games) values
 insert into competition (comp_designation, comp_opponent, team_id, games) values ('Croatia', 'Utah Agave', 3, 40);
 
 -- select team_name, comp_designation, comp_opponent, games from competition join team using (team_id);
-
--- select * from player;
 
 Insert into game (player_id, game_opponent, comp_id, sets, sets_won, sets_lost) values (157, 'Lecordier', 1, 4, 0, 3);
 Insert into game (player_id, game_opponent, comp_id, sets, sets_won, sets_lost) values (217, 'Peal', 2, 4, 2, 2);
@@ -756,173 +957,13 @@ Insert into game (player_id, game_opponent, comp_id, sets, sets_won, sets_lost) 
 Insert into game (player_id, game_opponent, comp_id, sets, sets_won, sets_lost) values (80, 'Cardnell', 9, 4, 0, 4);
 Insert into game (player_id, game_opponent, comp_id, sets, sets_won, sets_lost) values (39, 'McGinnell', 10, 4, 0, 1);
 
-select * from game;
+-- select * from game;
 
+/*
+ * Testing views
+ */
 
-
-select case when sets_won > sets_lost then 1 else 0 end as winner from game;
-
-
--- create view team_members as
- select
-	team_name,
-	player_name,
-	comp_designation
-from
-	player
-join game
-		using (player_id)
-join competition
-		using (comp_id)
-join team
-		using (team_id)
-order by
-	team_name,
-	player_name,
-	comp_designation;
-
-drop view if exists game_stats;
-
-create view game_stats as
- select
-	game_id,
-	comp_id,
-	sets,
-	sets_won + sets_lost as sets_played,
-	sets_won,
-	sets_lost,
-	case when sets_lost = sets_won then 'X' when sets_won > sets_lost then '1' else '2' end as result,
-	case when (sets_won + sets_lost) < sets then 0 else 1 end as finished
-from
-	game;
-
-select * from game_stats;
-
-select comp_id,game_id,sets,sets_won,sets_lost,result,finished,games from game_stats join competition using (comp_id);
-
-select comp_id,count(*) as finished_games from game_stats where finished = 1 group by comp_id;
--- select comp_id, (select count(*) from game_stats where finished = 1) from game_stats group by comp_id;
-select count(*) from game_stats where finished = 1 group by comp_id;
-select count(*) as finished_games from game_stats where finished = 1 group by comp_id;
-
-select comp_id, finished_games, unfinished_games
-from 
-competition join
-(select comp_id, count(*) as finished_games from game_stats where finished = 1 group by comp_id) finished_stats
-using (comp_id) join
-(select comp_id, count(*) as unfinished_games from game_stats where finished = 0 group by comp_id) unfinished_stats
-using (comp_id)
-;
-
-drop view if exists comp_stats;
-
-
-create view comp_stats as
- select
-	comp_id,
-	games,
-	finished_games,
-	games - finished_games as unfinished_games,
-	case
-		when finished_games = games then 1
-		else 0
-	end as finished,
-	case
-		when won_finished > lost_finished then '1'
-		when lost_finished > won_finished then '2'
-		else 'X'
-	end as result_finished,
-	won_finished,
-	lost_finished,
-	finished_games - (won_finished + lost_finished) as draw_finished,
-	case
-		when won_all > lost_all then '1'
-		when lost_all > won_all then '2'
-		else 'X'
-	end as result_all,
-	won_all,
-	lost_all,
-	games - (won_all + lost_all) as draw_all
-from
-	(
-	select
-		comp_id,
-		count(*) as finished_games
-	from
-		game_stats
-	where
-		finished = 1
-	group by
-		comp_id) finished_stats
-join (
-	select
-		comp_id,
-		count(*) as won_finished
-	from
-		game_stats
-	where
-		finished = 1
-		and result = '1'
-	group by
-		comp_id) won_fin_stats
-		using (comp_id)
-join (
-	select
-		comp_id,
-		count(*) as lost_finished
-	from
-		game_stats
-	where
-		finished = 1
-		and result = '2'
-	group by
-		comp_id) lost_fin_stats
-		using (comp_id)
-join (
-	select
-		comp_id,
-		count(*) as won_all
-	from
-		game_stats
-	where
-		result = '1'
-	group by
-		comp_id) won_all_stats
-		using (comp_id)
-join (
-	select
-		comp_id,
-		count(*) as lost_all
-	from
-		game_stats
-	where
-		result = '2'
-	group by
-		comp_id) lost_all_stats
-		using (comp_id)
-join competition
-		using (comp_id);
-
-select * from comp_stats;
-	
--- On first try I include comp_id in the game_stats view, so I can generate comp_stats by joining competition and game_stats
--- (i.e. without doing an extra join with game).
--- Can I also do it by joining competition and game and fetching the game_stats data in subselects?
-
-drop view if exists games_overview;
-
-create view games_overview as
-select player_name, game_opponent, comp_designation, game.sets, sets_played, game.sets_won, game.sets_lost, result, finished  
-from game_stats join game using (game_id) join player using (player_id) join competition on (game.comp_id = competition.comp_id);
-
-select * from games_overview;
-
-drop view if exists comp_overview;
-
-create view comp_overview as
-select team_name, comp_designation, comp_opponent, competition.games, finished_games, unfinished_games, finished, result_finished, won_finished, lost_finished, draw_finished, result_all, won_all, lost_all, draw_all
-from comp_stats join competition using (comp_id) join team using (team_id);
-
-select * from comp_overview;
-
-
+-- select * from game_stats;
+-- select * from comp_stats;
+-- select * from game_overview;
+-- select * from comp_overview;
