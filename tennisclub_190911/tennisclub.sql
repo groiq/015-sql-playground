@@ -14,8 +14,8 @@
 -- Later: Design some proper test data.
 
 -- Uncomment to set up database from the beginning. Use with caution.
-drop database if exists tennisclub;
-create database tennisclub;
+-- drop database if exists tennisclub;
+-- create database tennisclub;
 
 use tennisclub;
 
