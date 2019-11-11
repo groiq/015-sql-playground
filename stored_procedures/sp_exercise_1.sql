@@ -2,6 +2,11 @@
 mysql stored procedures exercise 1
 */
 
+
+/*
+mysql stored procedures exercise 1
+*/
+
 /*
 Erstelle eine Stored Function GEHALT, die zu einem Angestellten (Eingabepara- meter EMPNO) SAL+COMM berechnet und zurückgibt. Teste die Funktion.
 */
@@ -15,13 +20,15 @@ CREATE FUNCTION `gehalt` (empno int)
 RETURNS DECIMAL(8,2)
 BEGIN
 	-- set @commission_pct = 
-	set @gehalt = (select salary from employees where employee_id = empno);
-    set @commission = (select commission_pct from employees where employee_id = empno);
-    if(@commission is null) then
-		set @commission = 0;
+    declare commission decimal(8,2);
+    declare gehalt decimal(8,2);
+	set gehalt = (select salary from employees where employee_id = empno);
+    set commission = (select commission_pct from employees where employee_id = empno);
+    if(commission is null) then
+		set commission = 0;
 	end if;
-    set @gehalt = @gehalt + (@gehalt * @commission);
-    return @gehalt;
+    set gehalt = gehalt + (gehalt * commission);
+    return gehalt;
 
 END$$
 
@@ -61,9 +68,11 @@ USE `ue_6_oder_auch_ue_5_employees`$$
 CREATE FUNCTION `diff_as_number` (emp_id_1 int, emp_id_2 int)
 RETURNS INTEGER
 BEGIN
-	set @date1 = (select hire_date from employees where employee_id = emp_id_1);
-    set @date2 = (select hire_date from employees where employee_id = emp_id_2);
-    return datediff(@date1,@date2);
+	declare date1 date;
+    declare date2 date;
+	set date1 = (select hire_date from employees where employee_id = emp_id_1);
+    set date2 = (select hire_date from employees where employee_id = emp_id_2);
+    return datediff(date1,date2);
 END$$
 
 DELIMITER ;
@@ -79,26 +88,35 @@ CREATE FUNCTION `diff` (emp_id_1 int, emp_id_2 int)
 RETURNS VARCHAR(64)
 BEGIN
 	
-    set @result = 'not quite there yet';
-    
-    set @diff_number = diff_as_number(emp_id_1,emp_id_2);
+    declare result varchar(64);
+    declare diff_number integer;
     
     if emp_id_1 = emp_id_2  then
-		set @result = 'error: same employee given twice.';
+		set result = 'error: same employee given twice.';
 	else
-		if @diff_number < 0 then
-			set @placeholder = emp_id_1;
-            set emp_id_1 = emp_id_2;
-            set emp_id_2 = @placeholder;
-            set @diff_number = @diff_number * (-1);
+		set diff_number = diff_as_number(emp_id_1,emp_id_2);
+        -- if diff_number is a negative number -n, then emp 2 was hired n days before emp 1.
+		if diff_number < 0 then
+			begin
+				declare placeholer integer;
+				set placeholder = emp_id_1;
+				set emp_id_1 = emp_id_2;
+				set emp_id_2 = placeholder;
+				set diff_number = diff_number * (-1);
+			end;
         end if;
-        select first_name, last_name into @first_1, @last_1 from employees where employee_id = emp_id_1;
-        select first_name, last_name into @first_2, @last_2 from employees where employee_id = emp_id_2;
-        
-        set @result = concat_ws(" ", @first_1, @last_1, 'was hired', @diff_number, 'days before', @first_2, @last_2);
+        begin
+			declare first_1 varchar(20);
+            declare first_2 varchar(20);
+            declare last_1 varchar(20);
+            declare last_2 varchar(20);
+			select first_name, last_name into first_1, last_1 from employees where employee_id = emp_id_1;
+			select first_name, last_name into first_2, last_2 from employees where employee_id = emp_id_2;
+			set result = concat_ws(" ", first_1, last_1, 'was hired', diff_number, 'days before', first_2, last_2);
+        end;
     end if;
     
-	return @result;
+	return result;
     
 END$$
 
