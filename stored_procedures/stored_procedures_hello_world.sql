@@ -50,4 +50,49 @@ end $$
 
 call call_hello_world_recurse;
 
+USE `stored_procedures_hello_world`;
+DROP function IF EXISTS `fetch_message`;
+
+DELIMITER $$
+USE `stored_procedures_hello_world`$$
+CREATE FUNCTION `fetch_message` (id int)
+RETURNS varchar(64)
+BEGIN
+
+RETURN (select message_text from messages where message_id = id);
+END$$
+
+DELIMITER ;
+
+select fetch_message(1);
+
+-- try to do the procedure-as-function trick...
+
+DROP function IF EXISTS `display_and_return`;
+
+DELIMITER $$
+USE `stored_procedures_hello_world`$$
+CREATE FUNCTION `display_and_return` (id int)
+RETURNS BIT
+BEGIN
+	declare is_found bit;
+    if (exists (select * from messages where message_id = id)) then
+		begin
+			-- okay, this doesn't even pass
+           -- select * from messages where message_id = id;
+			set is_found = 1;
+ 		end;
+	else
+		set is_found = 0;
+	end if;
+RETURN is_found;
+END$$
+
+DELIMITER ;
+
+set @tester1 = display_and_return(1);
+set @tester2 = display_and_return(99999);
+
+select @tester1, @tester2;
+
 
