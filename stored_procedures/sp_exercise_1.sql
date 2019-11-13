@@ -2,11 +2,6 @@
 mysql stored procedures exercise 1
 */
 
-
-/*
-mysql stored procedures exercise 1
-*/
-
 /*
 Erstelle eine Stored Function GEHALT, die zu einem Angestellten (Eingabepara- meter EMPNO) SAL+COMM berechnet und zurückgibt. Teste die Funktion.
 */
@@ -53,7 +48,6 @@ select employee_id, salary, commission_pct, gehalt(employee_id) as gehalt from e
 seems to match.
 */
 
-
 /*
 ErstelleeineStoredFunctionDIFF,diedieTagesdifferenzbezüglichdesAnstel- lungsdatums zweier Angestellter (Eingabeparameter 2x EMPNO) ausgibt.
 Die Ausgabe soll folgende Format haben: ... 65 Tage vor ...
@@ -98,7 +92,7 @@ BEGIN
         -- if diff_number is a negative number -n, then emp 2 was hired n days before emp 1.
 		if diff_number < 0 then
 			begin
-				declare placeholer integer;
+				declare placeholder integer;
 				set placeholder = emp_id_1;
 				set emp_id_1 = emp_id_2;
 				set emp_id_2 = placeholder;
@@ -132,7 +126,7 @@ So, both (100,200) and (200,100) should report that 200 was hired 92 days after 
 
 select e1.employee_id, e1.first_name, e1.last_name, 
 			e2.employee_id, e2.first_name, e2.last_name, 
-            e1.hire_date, e2.hire_date, diff(e1.employee_id,e2.employee_id) 
+            e1.hire_date, e2.hire_date, diff(e1.employee_id,e2.employee_id) as diff
             from employees e1 join employees e2 
             where (e1.employee_id = 100 and e2.employee_id = 200)
 			   or (e1.employee_id = 200 and e2.employee_id = 100) 
