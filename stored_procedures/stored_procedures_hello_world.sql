@@ -95,4 +95,15 @@ set @tester2 = display_and_return(99999);
 
 select @tester1, @tester2;
 
+USE `ue_6_oder_auch_ue_5_employees`;
+DROP procedure IF EXISTS `new_procedure`;
+
+DELIMITER $$
+USE `ue_6_oder_auch_ue_5_employees`$$
+CREATE PROCEDURE `new_procedure` ()
+BEGIN
+
+END$$
+
+DELIMITER ;
 

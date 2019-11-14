@@ -14,8 +14,7 @@ USE `ue_6_oder_auch_ue_5_employees`$$
 CREATE FUNCTION `gehalt` (empno int)
 RETURNS DECIMAL(8,2)
 BEGIN
-	-- set @commission_pct = 
-    declare commission decimal(8,2);
+	declare commission decimal(8,2);
     declare gehalt decimal(8,2);
 	set gehalt = (select salary from employees where employee_id = empno);
     set commission = (select commission_pct from employees where employee_id = empno);
