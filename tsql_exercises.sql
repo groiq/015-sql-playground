@@ -93,4 +93,14 @@ insert into player (pname, cid, score) values ('Lindsay Shenton', 4, 8393.15);
 
 go
 
+drop function if exists dbo.doTournament;
+go
+drop function if exists dbo.doFixture;
+go
+drop type if exists dbo.fixturePlayers;
+go
+
+create type dbo.fixturePlayers as table ( [pid] [int] );
+go
+
 
