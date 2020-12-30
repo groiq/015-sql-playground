@@ -103,4 +103,23 @@ go
 create type dbo.fixturePlayers as table ( [pid] [int] );
 go
 
+create function dbo.doTournament ()
+returns @tournament table
+(
+lid int not null,
+lscore decimal(8,2) not null,
+rid int not null,
+rscore decimal(8,2) not null,
+fixture int not null,
+winner int not null
+)
+with schemabinding
+as
+begin
+	insert into  @tournament (lid, lscore, rid, rscore, fixture, winner) 
+	values (1, 2.0, 3, 4.0, 5, 6);
+	return;
+end;
+go
 
+select * from dbo.doTournament();
