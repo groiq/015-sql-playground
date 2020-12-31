@@ -146,10 +146,10 @@ begin
 
 	insert into @dummList (pid) values (1),(3),(3),(7);
 
-	
-
 	insert into  @tournament (lid, lscore, rid, rscore, fixture, winner) 
-	values (1, 2.0, 3, 4.0, 5, 6);
+	select lid, lscore, rid, rscore, @fixture as fixture, winner 
+	from dbo.doFixture(@dummList);
+
 	return;
 end;
 go
