@@ -129,6 +129,12 @@ begin
 	return;
 end;
 go
+/*
+Note that this solution fetches player score by joining back to player 
+in every fixture, that means twice for each pairing.
+A quicker solution, albeit *maybe* with a bit more code,
+is storing the score together with the pids in the @fixture table type.
+*/
 
 create function dbo.doTournament ()
 returns @tournament table
