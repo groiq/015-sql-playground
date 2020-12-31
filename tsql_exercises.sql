@@ -103,6 +103,32 @@ go
 create type dbo.fixturePlayers as table ( [pid] [int] );
 go
 
+create function dbo.doFixture (@input dbo.fixturePlayers readonly)
+returns @fixture table
+(
+lid int not null,
+lscore decimal(8,2) not null,
+rid int not null,
+rscore decimal(8,2) not null,
+fixture int not null,
+winner int not null
+)
+with schemabinding
+as
+begin
+	insert into  @tournament (lid, lscore, rid, rscore, fixture, winner) 
+	values (1, 2.0, 3, 4.0, 5, 6);
+	return;
+end;
+go
+
+/*
+	insert into @matchlvl (lpid, lscore, rpid, rscore, winner) 
+	select i.lpid, lp.score as lscore, i.rpid, rp.score as rscore,
+	(case when lp.score > rp.score then lp.pid else rp.pid end) as winner 
+	from dbo.player as lp inner join @input as i on lp.pid = i.lpid 
+	inner join dbo.player as rp on i.rpid = rp.pid;
+*/
 create function dbo.doTournament ()
 returns @tournament table
 (
