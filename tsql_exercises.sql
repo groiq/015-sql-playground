@@ -160,4 +160,7 @@ go
 declare @input as table (pid int);
 insert into @input (pid) values (1),(3),(5),(7);
 
-select pid, lead(pid) over (order by pid) from @input;
+with pairings as 
+(select pid as lpid, lead(pid) over (order by pid) as rpid, row_number() over (order by pid) as rownum from @input),
+pa as (select lpid, rpid from pairings where (rownum % 2) = 1)
+select * from pa;
