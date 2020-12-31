@@ -97,27 +97,26 @@ drop function if exists dbo.doTournament;
 go
 drop function if exists dbo.doFixture;
 go
-drop type if exists dbo.fixturePlayers;
+drop type if exists dbo.fixturePlayersType;
 go
 
-create type dbo.fixturePlayers as table ( [pid] [int] );
+create type dbo.fixturePlayersType as table ( [pid] [int] );
 go
 
-create function dbo.doFixture (@input dbo.fixturePlayers readonly)
+create function dbo.doFixture (@input dbo.fixturePlayersType readonly)
 returns @fixture table
 (
 lid int not null,
 lscore decimal(8,2) not null,
 rid int not null,
 rscore decimal(8,2) not null,
-fixture int not null,
 winner int not null
 )
 with schemabinding
 as
 begin
-	insert into  @tournament (lid, lscore, rid, rscore, fixture, winner) 
-	values (1, 2.0, 3, 4.0, 5, 6);
+	insert into  @fixture (lid, lscore, rid, rscore, winner) 
+	values (1, 2.0, 3, 4.0, 6);
 	return;
 end;
 go
@@ -142,6 +141,13 @@ winner int not null
 with schemabinding
 as
 begin
+	declare @fixture as int = 1;
+	declare @dummList as dbo.fixturePlayersType;
+
+	insert into @dummList (pid) values (1),(3),(3),(7);
+
+	
+
 	insert into  @tournament (lid, lscore, rid, rscore, fixture, winner) 
 	values (1, 2.0, 3, 4.0, 5, 6);
 	return;
