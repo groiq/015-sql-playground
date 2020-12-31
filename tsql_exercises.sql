@@ -152,6 +152,13 @@ begin
 	select lpid, lscore, rpid, rscore, @fixture as fixture, winner 
 	from dbo.doFixture(@fixturePlayers);
 
+	while ((select count(*) from @fixturePlayers) > 1)
+	begin
+		delete from @fixturePlayers where pid = (select max(pid) from @fixturePlayers);
+		insert into @tournament (lpid, lscore, rpid, rscore, fixture, winner)
+		select pid, pid, pid, pid, pid, pid from @fixturePlayers;
+	end;
+
 	return;
 end;
 go
