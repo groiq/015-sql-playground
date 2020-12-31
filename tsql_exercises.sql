@@ -130,13 +130,6 @@ begin
 end;
 go
 
-/*
-	insert into @matchlvl (lpid, lscore, rpid, rscore, winner) 
-	select i.lpid, lp.score as lscore, i.rpid, rp.score as rscore,
-	(case when lp.score > rp.score then lp.pid else rp.pid end) as winner 
-	from dbo.player as lp inner join @input as i on lp.pid = i.lpid 
-	inner join dbo.player as rp on i.rpid = rp.pid;
-*/
 create function dbo.doTournament ()
 returns @tournament table
 (
