@@ -154,4 +154,10 @@ begin
 end;
 go
 
-select * from dbo.doTournament();
+--select * from dbo.doTournament();
+
+
+declare @input as table (pid int);
+insert into @input (pid) values (1),(3),(5),(7);
+
+select pid from @input;
