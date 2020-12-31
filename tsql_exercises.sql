@@ -151,13 +151,13 @@ with schemabinding
 as
 begin
 	declare @fixture as int = 1;
-	declare @dummList as dbo.fixturePlayersType;
+	declare @fixturePlayers as dbo.fixturePlayersType;
 
-	insert into @dummList (pid) values (1),(3),(3),(7);
+	insert into @fixturePlayers (pid) select pid from dbo.player;
 
 	insert into  @tournament (lpid, lscore, rpid, rscore, fixture, winner) 
 	select lpid, lscore, rpid, rscore, @fixture as fixture, winner 
-	from dbo.doFixture(@dummList);
+	from dbo.doFixture(@fixturePlayers);
 
 	return;
 end;
