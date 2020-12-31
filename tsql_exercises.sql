@@ -106,16 +106,16 @@ go
 create function dbo.doFixture (@input dbo.fixturePlayersType readonly)
 returns @fixture table
 (
-lid int not null,
+lpid int not null,
 lscore decimal(8,2) not null,
-rid int not null,
+rpid int not null,
 rscore decimal(8,2) not null,
 winner int not null
 )
 with schemabinding
 as
 begin
-	insert into  @fixture (lid, lscore, rid, rscore, winner) 
+	insert into  @fixture (lpid, lscore, rpid, rscore, winner) 
 	values (1, 2.0, 3, 4.0, 6);
 	return;
 end;
@@ -131,9 +131,9 @@ go
 create function dbo.doTournament ()
 returns @tournament table
 (
-lid int not null,
+lpid int not null,
 lscore decimal(8,2) not null,
-rid int not null,
+rpid int not null,
 rscore decimal(8,2) not null,
 fixture int not null,
 winner int not null
@@ -146,8 +146,8 @@ begin
 
 	insert into @dummList (pid) values (1),(3),(3),(7);
 
-	insert into  @tournament (lid, lscore, rid, rscore, fixture, winner) 
-	select lid, lscore, rid, rscore, @fixture as fixture, winner 
+	insert into  @tournament (lpid, lscore, rpid, rscore, fixture, winner) 
+	select lpid, lscore, rpid, rscore, @fixture as fixture, winner 
 	from dbo.doFixture(@dummList);
 
 	return;
@@ -158,13 +158,25 @@ go
 
 
 declare @input as table (pid int);
-insert into @input (pid) values (1),(3),(5),(7);
+insert into @input (pid) select pid from player;
+
+declare @fixture as table
+(
+lpid int not null,
+lscore decimal(8,2) not null,
+rpid int not null,
+rscore decimal(8,2) not null,
+winner int not null
+);
 
 with pairings as 
 	(select pid as lpid, lead(pid) over (order by pid) as rpid, row_number() over (order by pid) as rownum from @input),
 	pa as (select lpid, rpid from pairings where (rownum % 2) = 1)
+insert into @fixture (lpid, lscore, rpid, rscore, winner)
 select pa.lpid, pl.score as lscore, pa.rpid, pr.score as rscore,
 		case when pl.score > pr.score then lpid else rpid end as winner
 	from player pl 
 	join pa on pl.pid = pa.lpid
 	join player pr on pa.rpid = pr.pid;
+
+select * from @fixture;
