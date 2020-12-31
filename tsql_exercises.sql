@@ -16,6 +16,7 @@ example: some kind of tournament
 
 use doodles;
 
+/*
 drop table if exists player;
 drop table if exists country;
 
@@ -92,6 +93,7 @@ insert into player (pname, cid, score) values ('Aviva De Dei', 5, 4327.82);
 insert into player (pname, cid, score) values ('Lindsay Shenton', 4, 8393.15);
 
 go
+*/
 
 drop function if exists dbo.doTournament;
 go
@@ -115,8 +117,15 @@ winner int not null
 with schemabinding
 as
 begin
-	insert into  @fixture (lpid, lscore, rpid, rscore, winner) 
-	values (1, 2.0, 3, 4.0, 6);
+	with pairings as 
+		(select pid as lpid, lead(pid) over (order by pid) as rpid, row_number() over (order by pid) as rownum from @input),
+		pa as (select lpid, rpid from pairings where (rownum % 2) = 1)
+	insert into @fixture (lpid, lscore, rpid, rscore, winner)
+	select pa.lpid, pl.score as lscore, pa.rpid, pr.score as rscore,
+			case when pl.score > pr.score then lpid else rpid end as winner
+		from dbo.player pl 
+		join pa on pl.pid = pa.lpid
+		join dbo.player pr on pa.rpid = pr.pid;
 	return;
 end;
 go
@@ -154,29 +163,5 @@ begin
 end;
 go
 
---select * from dbo.doTournament();
+select * from dbo.doTournament();
 
-
-declare @input as table (pid int);
-insert into @input (pid) select pid from player;
-
-declare @fixture as table
-(
-lpid int not null,
-lscore decimal(8,2) not null,
-rpid int not null,
-rscore decimal(8,2) not null,
-winner int not null
-);
-
-with pairings as 
-	(select pid as lpid, lead(pid) over (order by pid) as rpid, row_number() over (order by pid) as rownum from @input),
-	pa as (select lpid, rpid from pairings where (rownum % 2) = 1)
-insert into @fixture (lpid, lscore, rpid, rscore, winner)
-select pa.lpid, pl.score as lscore, pa.rpid, pr.score as rscore,
-		case when pl.score > pr.score then lpid else rpid end as winner
-	from player pl 
-	join pa on pl.pid = pa.lpid
-	join player pr on pa.rpid = pr.pid;
-
-select * from @fixture;
