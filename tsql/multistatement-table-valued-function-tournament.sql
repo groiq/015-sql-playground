@@ -1,24 +1,31 @@
 
-/***************************************************
-	A file for exercises in TSQL
-***************************************************/
-
-use doodles;
+/***************************************************************
+	Multistatement table-valued functions - tournament
+***************************************************************/
 
 /*
 Using a table-valued function to iteratively fill a table
 example: some kind of tournament
 */
 
+use doodles;
+
+-- drops
+
+drop function if exists dbo.doTournament;
+go
+drop function if exists dbo.doFixture;
+go
+drop type if exists dbo.fixturePlayersType;
+go
+
+drop table if exists player;
+drop table if exists country;
+go
+
 -- Data setup 
 
 -- note that this has some elements I won't be using in the example. I'll just use player.pid and player.score.)
-
-use doodles;
-
-/*
-drop table if exists player;
-drop table if exists country;
 
 create table country (cid int primary key, cname varchar(32));
 create table player (pid int primary key identity(1,1), cid int, pname varchar(32), score decimal(8,2), foreign key (cid) references country (cid));
@@ -92,14 +99,6 @@ insert into player (pname, cid, score) values ('Sander Willans', 8, 2332.34);
 insert into player (pname, cid, score) values ('Aviva De Dei', 5, 4327.82);
 insert into player (pname, cid, score) values ('Lindsay Shenton', 4, 8393.15);
 
-go
-*/
-
-drop function if exists dbo.doTournament;
-go
-drop function if exists dbo.doFixture;
-go
-drop type if exists dbo.fixturePlayersType;
 go
 
 create type dbo.fixturePlayersType as table ( [pid] [int] );
