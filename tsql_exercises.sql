@@ -149,14 +149,22 @@ begin
 	insert into @fixturePlayers (pid) select pid from dbo.player;
 
 	insert into  @tournament (lpid, lscore, rpid, rscore, fixture, winner) 
-	select lpid, lscore, rpid, rscore, @fixture as fixture, winner 
-	from dbo.doFixture(@fixturePlayers);
+		select lpid, lscore, rpid, rscore, @fixture as fixture, winner 
+		from dbo.doFixture(@fixturePlayers);
 
 	while ((select count(*) from @fixturePlayers) > 1)
 	begin
-		delete from @fixturePlayers where pid = (select max(pid) from @fixturePlayers);
-		insert into @tournament (lpid, lscore, rpid, rscore, fixture, winner)
-		select pid, pid, pid, pid, pid, pid from @fixturePlayers;
+		delete from @fixturePlayers;
+
+		insert into @fixturePlayers (pid)
+			select winner as pid from @tournament 
+			where fixture = @fixture;
+
+		set @fixture += 1;
+
+		insert into  @tournament (lpid, lscore, rpid, rscore, fixture, winner) 
+			select lpid, lscore, rpid, rscore, @fixture as fixture, winner 
+			from dbo.doFixture(@fixturePlayers);
 	end;
 
 	return;
