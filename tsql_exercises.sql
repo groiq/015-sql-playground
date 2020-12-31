@@ -160,4 +160,4 @@ go
 declare @input as table (pid int);
 insert into @input (pid) values (1),(3),(5),(7);
 
-select pid from @input;
+select pid, lead(pid) over (order by pid) from @input;
