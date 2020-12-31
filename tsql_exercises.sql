@@ -163,7 +163,8 @@ insert into @input (pid) values (1),(3),(5),(7);
 with pairings as 
 	(select pid as lpid, lead(pid) over (order by pid) as rpid, row_number() over (order by pid) as rownum from @input),
 	pa as (select lpid, rpid from pairings where (rownum % 2) = 1)
-select pa.lpid, pl.score as lscore, pa.rpid, pr.score as rscore 
+select pa.lpid, pl.score as lscore, pa.rpid, pr.score as rscore,
+		case when pl.score > pr.score then lpid else rpid end as winner
 	from player pl 
 	join pa on pl.pid = pa.lpid
 	join player pr on pa.rpid = pr.pid;
