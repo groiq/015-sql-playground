@@ -19,7 +19,13 @@ step int
 with schemabinding 
 as 
 begin
-	
+	-- insert first two lines
+	insert into @fibonacci
+		(pre1, pre2, curr, step)
+	values 
+		((2 * @zero - @one), (@one - @zero), @zero, 0),
+		((@one - @zero), @zero, @one, 1);
+
 return;
 end;
 go
